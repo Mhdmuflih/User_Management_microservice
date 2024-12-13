@@ -3,6 +3,7 @@ import bcypt from "bcryptjs";
 import { UserData, userType, } from "../Interface/userInput";
 import UserModel from "../Model/UserModel";
 import generateToken from "../JWT/jwt";
+import { sendNotification } from "../services/Notification";
 
 const passwordHashing = async (password: string): Promise<string | undefined> => {
     try {
@@ -67,6 +68,14 @@ const login = async (req: Request, res: Response): Promise<any> => {
 
         const token: string = generateToken(userData._id);
 
+        const notificationResponse = await sendNotification(
+            email,
+            'You have successfully logged in!',
+        );
+
+        console.log('Notification response:', notificationResponse);
+
+
         res.status(200).json({ success: true, message: "Login Successful", token: token, user: userData });
 
     } catch (error: any) {
@@ -86,8 +95,8 @@ const editUser = async (req: Request, res: Response): Promise<any> => {
         }
 
         const emailExist = await UserModel.findOne({ email: email, _id: { $ne: user._id } });
-        if(emailExist) {
-            return res.status(200).json({success: false , message: "This email is already exisit"});
+        if (emailExist) {
+            return res.status(200).json({ success: false, message: "This email is already exisit" });
         }
 
         const updateUserData = await UserModel.findByIdAndUpdate(
