@@ -17,12 +17,12 @@
 //       oneofs: true,
 //     },
 //   );
-  
+
 //   const notificationProto: any = grpc.loadPackageDefinition(packageDefinition).NotificationService;
-  
+
 //   // Create the gRPC client
 //   const client = new notificationProto('localhost:50051', grpc.credentials.createInsecure(),);
-  
+
 //   export const sendNotification = (email: string, message: string): Promise<any> => {
 //     return new Promise((resolve, reject) => {
 //       const request = {email , message};
@@ -133,11 +133,11 @@ const ProtoPath = path.resolve(__dirname, "../proto/Notification.proto");
 
 // Load the proto file using protoLoader
 const packageDefinition = protoLoader.loadSync(ProtoPath, {
-  keepCase: true,
-  longs: String,
-  enums: String,
-  defaults: true,
-  oneofs: true,
+    keepCase: true,
+    longs: String,
+    enums: String,
+    defaults: true,
+    oneofs: true,
 });
 console.log('2');
 
@@ -153,12 +153,13 @@ export const sendNotification = (email: string, message: string): Promise<any> =
 
         client.SendNotification(request, (error: any, response: any) => {
             if (error) {
-                console.log("Error in gRPC notification: ", error.message);
-                reject(error);
+                console.log("Error in gRPC notification in client side: ", error);
+                reject(error); // Reject the promise with the error
             } else {
-                console.log('heloo')
-                resolve(response);
+                console.log('Notification sent successfully: ', response);
+                resolve(response); // Resolve with the response
             }
         });
+
     });
 };

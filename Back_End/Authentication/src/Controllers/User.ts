@@ -68,9 +68,10 @@ const login = async (req: Request, res: Response): Promise<any> => {
 
         const token: string = generateToken(userData._id);
 
+        const message: string = 'You have successfully logged in!'
         const notificationResponse = await sendNotification(
             email,
-            'You have successfully logged in!',
+            message,
         );
 
         console.log('Notification response:', notificationResponse);
