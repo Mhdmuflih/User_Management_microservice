@@ -2,6 +2,11 @@
 // import { NotificationService } from "./notification.service";
 // import { NotificationController } from "./notification.controller";
 
+import { Module } from "@nestjs/common";
+import { NotificationService } from "./notification.service";
+import { EmailService } from "./mailer.service";
+import { NotificationController } from "./notification.controller";
+
 // @Module({
 //     imports: [],
 //     providers: [NotificationService],
@@ -11,11 +16,26 @@
 // export class NotificationModule{};
 
 
-import { Module } from '@nestjs/common';
-import { MailerService } from './notification.service';
+// import { Module } from '@nestjs/common';
+// // import { MailerService } from './notification.service';
+
+// @Module({
+//   providers: [MailerService],
+//   exports: [MailerService],
+// })
+// export class MailerModule {}
+
+
+// @Module({
+//   providers: [NotificationService,  EmailService],
+//   exports: [NotificationService]
+// })
+
+// export class NotificationModule {}
 
 @Module({
-  providers: [MailerService],
-  exports: [MailerService], // Export if used in other modules
+  providers: [NotificationService],
+  controllers: [NotificationController]
 })
-export class MailerModule {}
+
+export class NotificationModule {};
