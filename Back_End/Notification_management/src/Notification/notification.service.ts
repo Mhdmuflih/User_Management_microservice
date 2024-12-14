@@ -82,10 +82,15 @@ import { Injectable } from "@nestjs/common";
 
 @Injectable()
 export class NotificationService {
-    async sendEmail(call: any): Promise<any> {
-        const {email, message } = call.request;
-        console.log(call, "this is the call");
-        console.log(email, message, "this is the email and message");
-        console.log(call.request, "this is the call request");
-    }
+  async sendEmail(call: any): Promise<any> {
+    console.log('call.request:', call.request);
+    const { email, message } = call;
+
+    console.log(call, "this is the call");
+    console.log(email, message, "this is the email and message");
+    console.log(call.request, "this is the call request");
+
+    // You should return a proper response as expected by the proto definition
+    return { status: 'success', error_message: '' };
+  }
 }
