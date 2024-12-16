@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { SendEmailRequest } from "../Interface/email.interface";
 import { EmailService } from "./mailer.service";
 
 
