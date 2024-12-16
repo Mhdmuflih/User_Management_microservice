@@ -5,16 +5,16 @@ import { Module } from '@nestjs/common';
 import { GrpcOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 import { NotificationModule } from './Notification/notification.module';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+// import { AppController } from './app.controller';
+// import { AppService } from './app.service';
 
 @Module({
   imports: [
     NotificationModule, // Import the user module
-  ],
-  controllers: [AppController],
-  providers: [AppService]
+  ]
 })
+
+// here call the gRPC server running
 export class AppModule {
   static grpcOptions(): GrpcOptions {
     console.log('Resolved protoPath:', __dirname + './Notification.proto');
