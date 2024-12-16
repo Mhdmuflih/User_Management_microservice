@@ -67,8 +67,10 @@ const login = async (req: Request, res: Response): Promise<any> => {
         }
 
         const token: string = generateToken(userData._id);
-
+        
+        // ivide ann aa message varible edth vekknnee
         const message: string = 'You have successfully logged in!'
+        // ivide ann gRPC call cheyynee
         const notificationResponse = await sendNotification(
             email,
             message,

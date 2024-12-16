@@ -126,9 +126,7 @@ import * as grpc from "@grpc/grpc-js";
 import * as protoLoader from "@grpc/proto-loader";
 import path from "path";
 
-// const ProtoPath = "../proto/Notification.proto";
-console.log('1');
-
+// proto file ntte file directry edkkan
 const ProtoPath = path.resolve(__dirname, "../proto/Notification.proto");
 
 // Load the proto file using protoLoader
@@ -139,17 +137,21 @@ const packageDefinition = protoLoader.loadSync(ProtoPath, {
     defaults: true,
     oneofs: true,
 });
-console.log('2');
 
+// notification proto last .notification is that package name;
 const notificationProto: any = grpc.loadPackageDefinition(packageDefinition).notification;
-console.log('3');
+
+// this is gRPC servicer set cheyyan ith notification nere mukalil lla varibale ann athill proto file edthe davum
+// athille gRPC service aann NotificationService...
 const client: any = new notificationProto.NotificationService('localhost:50051', grpc.credentials.createInsecure());
-console.log('4');
+
+
+// ith ann client ntte edth nammal eyutha ayakande sathanam . userManagement ll call cheyyum.
 export const sendNotification = (email: string, message: string): Promise<any> => {
     return new Promise((resolve, reject) => {
         const request = { email, message };
 
-        console.log("This is the request of the notification service:", request);
+        // console.log("This is the request of the notification service:", request);
 
         client.SendNotification(request, (error: any, response: any) => {
             if (error) {
