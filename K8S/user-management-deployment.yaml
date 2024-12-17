@@ -1,0 +1,38 @@
+# deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+  labels:
+    app: user-service
+spec:
+  replicas: 1  
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+      - name: user-service
+        image: mhdmuflih/crud-micro:user-service  
+        imagePullPolicy: Always
+
+---
+
+# service
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+spec:
+  type: NodePort
+  selector:
+    app: user-service
+  ports:
+    - name: user-service
+      protocol: TCP
+      port: 1000  # The external service port
+      targetPort: 1000 # The container port

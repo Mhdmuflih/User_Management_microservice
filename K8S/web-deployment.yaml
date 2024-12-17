@@ -1,0 +1,38 @@
+# deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-depl
+  labels:
+    app: web
+spec:
+  replicas: 1  
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: web
+        image: mhdmuflih/crud-micro:web  
+        imagePullPolicy: Always 
+
+---
+
+# service
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-srv
+spec:
+  type: NodePort
+  selector:
+    app: web
+  ports:
+    - name: web
+      protocol: TCP
+      port: 5173  # The external service port
+      targetPort: 5173 # The container port

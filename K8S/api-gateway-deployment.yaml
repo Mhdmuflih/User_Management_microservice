@@ -1,0 +1,38 @@
+# deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  labels:
+    app: api-gateway
+spec:
+  replicas: 1  
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+      - name: api-gateway
+        image: mhdmuflih/crud-micro:api-gateway  
+        imagePullPolicy: Always
+
+---
+
+# service
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway
+spec:
+  type: NodePort
+  selector:
+    app: api-gateway
+  ports:
+    - name: api-gateway
+      protocol: TCP
+      port: 8080  # The external service port
+      targetPort: 8080 # The container port

@@ -1,0 +1,38 @@
+# deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service
+  labels:
+    app: notification
+spec:
+  replicas: 1  
+  selector:
+    matchLabels:
+      app: notification
+  template:
+    metadata:
+      labels:
+        app: notification
+    spec:
+      containers:
+      - name: notification-service
+        image: mhdmuflih/crud-micro:notification  
+        imagePullPolicy: Always 
+
+---
+
+# service
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification-service
+spec:
+  type: NodePort
+  selector:
+    app: notification
+  ports:
+    - name: admin
+      protocol: TCP
+      port: 3000  # The external service port
+      targetPort: 3000 # The container port
