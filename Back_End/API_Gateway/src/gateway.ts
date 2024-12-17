@@ -18,7 +18,6 @@ app.use(morgan('tiny'));
 // docker-compose up --build
 app.use('/', proxy("user-service.default.svc.cluster.local:1000"));
 
-// app.use('/user', proxy("http://localhost:3000"));
 
 const port: number = 8080;
 
