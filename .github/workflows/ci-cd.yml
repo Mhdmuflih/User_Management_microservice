@@ -1,10 +1,9 @@
-name: Full-Stack CI/CD Pipeline
+name: CI/CD Pipeline
 
 on:
   push:
     branches:
-      - main
-  pull_request:
+      - main  # Trigger the pipeline on push to the main branch
 
 jobs:
   # Backend Workflow
@@ -13,34 +12,32 @@ jobs:
     steps:
       # Step 1: Checkout the repository
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4  
 
-      # Step 2: Set up Node.js for Backend
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      # Step 2: Set up Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3 
+
+      # Step 3: Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
         with:
-          node-version: '18'
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # Step 3: Install backend dependencies
-      - name: Install Backend Dependencies
-        working-directory: ./backend
-        run: npm install
-
-      # Step 4: Run backend tests
-      - name: Run Backend Tests
-        working-directory: ./backend
-        run: npm test
-
-      # Step 5: Build backend services (if required)
-      - name: Build Backend
-        working-directory: ./backend
-        run: npm run build
-
-      # Step 6: Deploy Backend
-      - name: Deploy Backend
+      # Step 4: Build Backend Docker images
+      - name: Build Backend Docker images
         run: |
-          echo "Deploying backend services..."
-          # Add backend deployment commands (e.g., SSH to server, upload artifacts)
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/crud-micro:api-gateway -f ./Back_End/API_Gateway/Dockerfile ./Back_End/API_Gateway
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/crud-micro:user-service -f ./Back_End/User-Management_Service/Dockerfile ./Back_End/User-Management_Service
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/crud-micro:notification -f ./Back_End/User-Notification_Service/Dockerfile ./Back_End/User-Notification_Service
+
+      # Step 5: Push Backend Docker images
+      - name: Push Backend Docker images
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/crud-micro:api-gateway
+          docker push ${{ secrets.DOCKER_USERNAME }}/crud-micro:user-service
+          docker push ${{ secrets.DOCKER_USERNAME }}/crud-micro:notification
 
   # Frontend Workflow
   frontend:
@@ -48,31 +45,73 @@ jobs:
     steps:
       # Step 1: Checkout the repository
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4  
 
-      # Step 2: Set up Node.js for Frontend
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      # Step 2: Set up Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3 
+
+      # Step 3: Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
         with:
-          node-version: '18'
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # Step 3: Install frontend dependencies
-      - name: Install Frontend Dependencies
-        working-directory: ./frontend
-        run: npm install
-
-      # Step 4: Run frontend tests
-      - name: Run Frontend Tests
-        working-directory: ./frontend
-        run: npm test
-
-      # Step 5: Build frontend application
-      - name: Build Frontend
-        working-directory: ./frontend
-        run: npm run build
-
-      # Step 6: Deploy Frontend
-      - name: Deploy Frontend
+      # Step 4: Build Frontend Docker image
+      - name: Build Frontend Docker image
         run: |
-          echo "Deploying frontend..."
-          # Add frontend deployment commands (e.g., upload build to S3, Vercel, Netlify)
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/crud-micro:web -f ./Front_End/Dockerfile ./Front_End
+
+      # Step 5: Push Frontend Docker image
+      - name: Push Frontend Docker image
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/crud-micro:web
+
+        # Step 6: Connect to EC2, Pull Images and Run Containers
+      - name: Deploy to EC2
+        run: |
+          ssh -T -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
+            echo "Pulling latest Docker images on EC2"
+            docker pull ${{ secrets.DOCKER_USERNAME }}/crud-micro:api-gateway
+            docker pull ${{ secrets.DOCKER_USERNAME }}/crud-micro:user-service
+            docker pull ${{ secrets.DOCKER_USERNAME }}/crud-micro:notification
+            docker pull ${{ secrets.DOCKER_USERNAME }}/crud-micro:web
+      
+            echo "Copying docker-compose.yml to EC2"
+            cat > docker-compose.yml << 'COMPOSE'
+            version: '3.8'
+      
+            services:
+              api-gateway:
+                image: ${{ secrets.DOCKER_USERNAME }}/crud-micro:api-gateway
+                container_name: api-gateway
+                ports:
+                  - "3000:3000"
+      
+              user-service:
+                image: ${{ secrets.DOCKER_USERNAME }}/crud-micro:user-service
+                container_name: user-service
+                ports:
+                  - "4000:4000"
+      
+              notification:
+                image: ${{ secrets.DOCKER_USERNAME }}/crud-micro:notification
+                container_name: notification
+                ports:
+                  - "5000:5000"
+      
+              web:
+                image: ${{ secrets.DOCKER_USERNAME }}/crud-micro:web
+                container_name: web
+                ports:
+                  - "5173:5173"
+            COMPOSE
+      
+            echo "Stopping and removing old containers"
+            docker-compose down
+      
+            echo "Running containers with Docker Compose"
+            docker-compose up --build -d
+          EOF
+      
