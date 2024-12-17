@@ -5,7 +5,7 @@ FROM node:16
 WORKDIR /usr/src/app
 
 # Copy package.json and package-lock.json for dependency installation
-COPY package.json package-lock.json ./
+COPY package*.json ./
 
 # Install dependencies
 RUN npm install
@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Expose the port your user management service will run on (default example: 5000)
-EXPOSE 5000
+EXPOSE 1000
 
 # Start the application
 CMD ["npm", "start"]

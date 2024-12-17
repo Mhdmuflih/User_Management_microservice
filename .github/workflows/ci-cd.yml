@@ -1,0 +1,78 @@
+name: Full-Stack CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  # Backend Workflow
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js for Backend
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # Step 3: Install backend dependencies
+      - name: Install Backend Dependencies
+        working-directory: ./backend
+        run: npm install
+
+      # Step 4: Run backend tests
+      - name: Run Backend Tests
+        working-directory: ./backend
+        run: npm test
+
+      # Step 5: Build backend services (if required)
+      - name: Build Backend
+        working-directory: ./backend
+        run: npm run build
+
+      # Step 6: Deploy Backend
+      - name: Deploy Backend
+        run: |
+          echo "Deploying backend services..."
+          # Add backend deployment commands (e.g., SSH to server, upload artifacts)
+
+  # Frontend Workflow
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js for Frontend
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # Step 3: Install frontend dependencies
+      - name: Install Frontend Dependencies
+        working-directory: ./frontend
+        run: npm install
+
+      # Step 4: Run frontend tests
+      - name: Run Frontend Tests
+        working-directory: ./frontend
+        run: npm test
+
+      # Step 5: Build frontend application
+      - name: Build Frontend
+        working-directory: ./frontend
+        run: npm run build
+
+      # Step 6: Deploy Frontend
+      - name: Deploy Frontend
+        run: |
+          echo "Deploying frontend..."
+          # Add frontend deployment commands (e.g., upload build to S3, Vercel, Netlify)

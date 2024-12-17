@@ -15,13 +15,15 @@ import { NotificationModule } from './Notification/notification.module';
 })
 
 // here call the gRPC server running
+// docker running notification_service:50051
+// minikube running 0.0.0.0:50051
 export class AppModule {
   static grpcOptions(): GrpcOptions {
     console.log('Resolved protoPath:', __dirname + './Notification.proto');
     return {
       transport: Transport.GRPC,
       options: {
-        url: 'localhost:50051',
+        url: '0.0.0.0:50051',
         package: 'notification', // Package name defined in .proto file
         protoPath: join(__dirname, './proto/Notification.proto'), // Path to the .proto file
       },

@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+
+  front_end:
+    build: ./Front_End
+    container_name: front_end
+    ports:
+      - "5173:5173"
+
+  api-gateway:
+    build: ./Back_End/API_Gateway
+    container_name: api_gateway
+    depends_on:
+      - user_service
+      - notification_service
+    ports:
+      - "8080:8080"
+    
+  user_service:
+    build: ./Back_End/User-Management_Service
+    container_name: user-mangement-servcie
+    ports:
+      - "1000:1000"
+  
+  notification_service:
+    build: ./Back_End/User-Notification_Service
+    container_name: user-notification-service
+    ports:
+      - "3000:3000"
+      - "50051:50051"
+    
+
+

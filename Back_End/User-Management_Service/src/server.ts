@@ -24,7 +24,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use('/', user_route);
-app.use('/admin', admin_route);
+// app.use('/admin', admin_route);
 
 const port: number = Number(process.env.PORT) || 5000;
 
