@@ -23,7 +23,7 @@ export class AppModule {
     return {
       transport: Transport.GRPC,
       options: {
-        url: '0.0.0.0:50051',
+        url: 'notification_service:50051',
         package: 'notification', // Package name defined in .proto file
         protoPath: join(__dirname, './proto/Notification.proto'), // Path to the .proto file
       },

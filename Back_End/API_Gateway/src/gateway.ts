@@ -16,7 +16,7 @@ app.use(morgan('tiny'));
 // docker running user_service
 // minikube running user-service.default.svc.cluster.local:1000
 // docker-compose up --build
-app.use('/', proxy("user-service.default.svc.cluster.local:1000"));
+app.use('/', proxy("user_service:1000"));
 
 
 const port: number = 8080;

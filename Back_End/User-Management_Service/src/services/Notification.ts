@@ -21,7 +21,7 @@ const notificationProto: any = grpc.loadPackageDefinition(packageDefinition).not
 // athille gRPC service aann NotificationService...
 // docker running notification_service
 // minikube running notification-service.default.svc.cluster.local:50051
-const client: any = new notificationProto.NotificationService('notification-service.default.svc.cluster.local:50051', grpc.credentials.createInsecure());
+const client: any = new notificationProto.NotificationService('notification_service:50051', grpc.credentials.createInsecure());
 
 
 // ith ann client ntte edth nammal eyutha ayakande sathanam . userManagement ll call cheyyum.
