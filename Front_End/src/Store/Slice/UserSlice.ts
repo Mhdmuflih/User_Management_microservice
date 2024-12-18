@@ -13,12 +13,14 @@ const initialState: UserReduxInitialStateManage = {
     user: storedUser,
     change: false
 }
+console.log(storedToken,'storetoken')
 
 const userAuthSlice = createSlice({
     name: "userAuth",
     initialState,
     reducers: {
         loginSuccess: (state: UserReduxInitialStateManage, action: PayloadAction<LoginPayload>) => {
+            console.log("payload", action.payload.isLoggedIn)
             localStorage.setItem('userToken', action.payload.token);
             localStorage.setItem('user', JSON.stringify(action.payload.user));
             state.isLoggedIn = action.payload.isLoggedIn;

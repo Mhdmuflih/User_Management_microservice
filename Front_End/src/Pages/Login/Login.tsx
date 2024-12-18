@@ -72,7 +72,7 @@ const Login = () => {
   }
 
   const navigateToSign = () => {
-
+    navigate('/signup');
   }
 
   return (
