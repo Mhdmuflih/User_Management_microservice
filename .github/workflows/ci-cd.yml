@@ -28,6 +28,7 @@ jobs:
           docker build -t ${{ secrets.DOCKER_USERNAME }}/crud-micro:api-gateway -f ./Back_End/API_Gateway/Dockerfile ./Back_End/API_Gateway
           docker build -t ${{ secrets.DOCKER_USERNAME }}/crud-micro:user-service -f ./Back_End/User-Management_Service/Dockerfile ./Back_End/User-Management_Service
           docker build -t ${{ secrets.DOCKER_USERNAME }}/crud-micro:notification -f ./Back_End/User-Notification_Service/Dockerfile ./Back_End/User-Notification_Service
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/crud-micro:web -f ./Front_End/Dockerfile ./Front_End
 
       # Step 5: Push Backend Docker images
       - name: Push Backend Docker images
@@ -35,6 +36,7 @@ jobs:
           docker push ${{ secrets.DOCKER_USERNAME }}/crud-micro:api-gateway
           docker push ${{ secrets.DOCKER_USERNAME }}/crud-micro:user-service
           docker push ${{ secrets.DOCKER_USERNAME }}/crud-micro:notification
+          docker push ${{ secrets.DOCKER_USERNAME }}/crud-micro:web
 
   # # Frontend Workflow
   # frontend:

@@ -13,13 +13,13 @@ function App() {
     <div>
       <Routes>
 
-        <Route element={<UserLoginProtectors />}>
+        <Route element={<UserRouteProtectors />}>
           <Route path='/' element={<Home />}></Route>
           <Route path='/edit-user' element={<EditUser />}></Route>
           <Route path='/chat' element={<Chat />}></Route>
         </Route>
 
-        <Route element={<UserRouteProtectors />}>
+        <Route element={<UserLoginProtectors />}>
           <Route path='/signup' element={<SignUp />}></Route>
           <Route path='/login' element={<Login />}></Route>
         </Route>
